@@ -1,0 +1,19 @@
+services:
+  yolo-api:
+    build: .
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  # Optional: self-hosted inference so images stay on your VPS after first model download.
+  # Set INFERENCE_MODE=local and INFERENCE_API_URL=http://inference:9001 in .env
+  inference:
+    image: roboflow/roboflow-inference-server-cpu:latest
+    ports:
+      - "9001:9001"
+    environment:
+      - ROBOFLOW_API_KEY=${ROBOFLOW_API_KEY}
+    profiles:
+      - local-inference
